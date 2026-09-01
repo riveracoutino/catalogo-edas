@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Explorador de recursos educativos de Content Hub" />
+    <title>Explora EDAs | Recursos de Content Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: { tec: "#0039A6", mariner: "#2766CB", ink: "#1F222E", lime: "#CDDE20", cyan: "#1BC0CB", orchid: "#AB8FF6", coral: "#E284B5", cream: "#F6F7F9" },
+            fontFamily: { sans: ["Inter", "system-ui", "sans-serif"], display: ["Space Grotesk", "Inter", "sans-serif"] }
+          }
+        }
+      };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="bg-cream text-ink antialiased">
+    <div class="noise" aria-hidden="true"></div>
+    <header class="fixed inset-x-0 top-0 z-40 border-b border-black/10 bg-cream/90 backdrop-blur-xl">
+      <nav class="mx-auto flex h-20 max-w-[1500px] items-center justify-between px-5 lg:px-10" aria-label="Navegación principal">
+        <a href="#catalogo" class="group flex items-center gap-3" aria-label="Explorador de recursos">
+          <span class="logo-mark">E</span>
+          <span><strong class="block font-display text-lg leading-none">Explora EDAs</strong><small class="mt-1 block text-[10px] font-bold uppercase tracking-[.22em] text-black/45">Aprendizaje que se vive</small></span>
+        </a>
+        <div class="hidden items-center gap-8 text-sm font-semibold md:flex">
+          <a class="rounded-full border border-black/15 bg-white px-5 py-2.5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md" href="#catalogo">Explorador de recursos</a>
+        </div>
+        <button id="menuButton" class="grid h-11 w-11 place-items-center rounded-full border border-black/15 bg-white md:hidden" aria-label="Abrir menú" aria-expanded="false">☰</button>
+      </nav>
+      <div id="mobileMenu" class="hidden border-t border-black/10 bg-cream px-5 py-4 md:hidden">
+        <a class="block py-2 font-semibold" href="#catalogo">Explorador de recursos</a>
+      </div>
+    </header>
+
+    <main>
+      <section id="catalogo" class="px-5 pb-20 pt-32 lg:px-10 lg:pb-28 lg:pt-40">
+        <div class="mx-auto max-w-[1500px]">
+          <div class="mb-12 grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
+            <div><p class="eyebrow">Biblioteca digital</p><h2 class="mt-3 max-w-3xl font-display text-4xl font-bold tracking-[-.045em] sm:text-6xl">Encuentra una experiencia para tu próximo reto.</h2></div>
+            <p class="max-w-md text-sm leading-relaxed text-black/55 lg:text-right">Explora los recursos publicados de Content Hub. Filtra por tipo, área o escuela y consulta la información disponible en la fuente institucional.</p>
+          </div>
+
+          <div class="sticky top-20 z-30 mb-8 border-y border-black/10 bg-cream/95 py-4 backdrop-blur-xl">
+            <div class="flex flex-col gap-3 xl:flex-row">
+              <label class="search-box flex-1"><span aria-hidden="true">⌕</span><input id="searchInput" type="search" placeholder="Buscar por título, curso o palabra clave…" autocomplete="off" /><kbd>⌘ K</kbd></label>
+              <div class="grid grid-cols-2 gap-3 md:grid-cols-5 xl:flex">
+                <select id="categoryFilter" aria-label="Filtrar por categoría"><option value="">Todas las categorías</option></select>
+                <select id="typeFilter" aria-label="Filtrar por tipo"><option value="">Todos los tipos</option></select>
+                <select id="disciplineFilter" aria-label="Filtrar por área"><option value="">Todas las áreas</option></select>
+                <select id="schoolFilter" aria-label="Filtrar por escuela"><option value="">Todas las escuelas</option></select>
+                <button id="clearFilters" class="col-span-2 rounded-2xl border border-black/15 bg-white px-5 py-3 text-sm font-bold transition hover:bg-black hover:text-white md:col-span-1">Limpiar filtros</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-6 flex items-center justify-between gap-4"><p id="resultCount" class="text-sm font-semibold text-black/55" aria-live="polite">Cargando experiencias…</p><div class="hidden items-center gap-2 text-xs font-bold uppercase tracking-wider text-black/40 sm:flex"><span class="h-2 w-2 rounded-full bg-lime ring-4 ring-lime/20"></span> Recursos disponibles</div></div>
+          <div id="catalogGrid" class="grid gap-5 md:grid-cols-2 xl:grid-cols-3"></div>
+          <div id="emptyState" class="hidden rounded-[2rem] border border-dashed border-black/20 bg-white p-12 text-center"><span class="text-5xl">⌕</span><h3 class="mt-4 font-display text-2xl font-bold">No encontramos coincidencias</h3><p class="mt-2 text-black/55">Prueba otra palabra o limpia los filtros.</p></div>
+          <div class="mt-10 text-center"><button id="loadMore" class="magnetic-button bg-white text-ink ring-1 ring-black/15"><span>Mostrar más experiencias</span><b>+</b></button></div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="bg-ink px-5 py-10 text-white lg:px-10"><div class="mx-auto flex max-w-[1500px] flex-col gap-6 sm:flex-row sm:items-center sm:justify-between"><img id="aFooterLogoTec" class="width-l h-10" src="public/images/logo-tec-blanco.svg" alt="Tecnológico de Monterrey"><p class="max-w-xl text-sm text-white/45">Sitio desarrollado por la Dirección de Innovación Educativa y Aprendizaje Digital. Vicerrectoría de Innovación Educativa y Normatividad Académica del Tecnológico de Monterrey.</p></div></footer>
+
+    <div id="detailDialog" class="detail-dialog" role="dialog" aria-modal="true" aria-labelledby="detailTitle" aria-hidden="true">
+      <div class="detail-backdrop" data-close-detail></div>
+      <article class="detail-panel">
+        <button class="detail-close" data-close-detail aria-label="Cerrar ficha">×</button>
+        <div class="detail-hero">
+          <img id="detailThumbnail" class="detail-thumbnail" alt="" />
+          <div class="detail-grid" aria-hidden="true"></div>
+          <div id="detailMonogram" class="detail-monogram"></div>
+        </div>
+        <div class="detail-content">
+          <div class="flex flex-wrap gap-2"><span id="detailType" class="chip"></span><span id="detailDiscipline" class="chip chip-muted"></span></div>
+          <h2 id="detailTitle" class="mt-5 font-display text-3xl font-bold leading-tight tracking-[-.045em] sm:text-5xl"></h2>
+          <p id="detailIntro" class="mt-5 max-w-3xl text-base leading-relaxed text-black/60"></p>
+          <dl class="detail-facts">
+            <div><dt>Proyecto o unidad de formación</dt><dd id="detailCourse"></dd></div>
+            <div><dt>Formato</dt><dd id="detailModality"></dd></div>
+            <div><dt>Escuela</dt><dd id="detailSchool"></dd></div>
+            <div><dt>Vistas registradas</dt><dd id="detailAnalytics"></dd></div>
+            <div><dt>Plataforma</dt><dd id="detailPlatform"></dd></div>
+            <div><dt>Grupo EDA</dt><dd id="detailGroup"></dd></div>
+          </dl>
+          <section id="academicSection" class="academic-section" aria-labelledby="academicHeading">
+            <div class="academic-heading"><div><p class="eyebrow">Información del recurso</p><h3 id="academicHeading">Información académica</h3></div></div>
+            <div id="detailAcademicData" class="academic-data"></div>
+          </section>
+          <div class="mt-8 flex flex-wrap items-center gap-4"><button id="launchResource" class="magnetic-button bg-tec text-white"><span>Explorar experiencia</span><b>↗</b></button><button id="requestResource" class="request-button">Solicitar uso</button><button id="viewRelated" class="request-button hidden">Ver recursos relacionados</button><button data-close-detail class="px-5 py-3 text-sm font-bold underline decoration-2 underline-offset-8">Volver al catálogo</button></div>
+          <p id="detailLaunchStatus" class="request-status" aria-live="polite"></p>
+        </div>
+      </article>
+    </div>
+
+    <div id="requestDialog" class="request-dialog" role="dialog" aria-modal="true" aria-labelledby="requestHeading" aria-hidden="true">
+      <div class="request-backdrop" data-close-request></div>
+      <section class="request-panel">
+        <button class="detail-close" data-close-request aria-label="Cerrar solicitud">×</button>
+        <p class="eyebrow">Solicitud de publicación</p><h2 id="requestHeading">Solicitar uso de esta EDA</h2><p id="requestResourceName" class="request-resource-name"></p>
+        <form id="accessRequestForm" class="request-form">
+          <input id="requestResourceId" name="resourceId" type="hidden" />
+          <label><span>Nombre de quien solicita</span><input name="requesterName" required /></label>
+          <label><span>Correo institucional</span><input name="requesterEmail" type="email" required /></label>
+          <label class="request-wide"><span>Curso o unidad de formación</span><input name="course" required /></label>
+          <label class="request-wide"><span>Propósito de uso</span><textarea name="purpose" rows="3" required></textarea></label>
+          <button class="admin-primary request-wide" type="submit">Enviar solicitud</button>
+        </form>
+        <p id="requestFormStatus" class="request-status" aria-live="polite"></p>
+      </section>
+    </div>
+
+    <div id="viewer" class="viewer" role="dialog" aria-modal="true" aria-labelledby="viewerTitle" aria-hidden="true">
+      <div class="viewer-backdrop" data-close-viewer></div>
+      <div class="viewer-panel">
+        <header class="viewer-header"><div class="min-w-0"><p id="viewerMeta" class="truncate text-xs font-bold uppercase tracking-widest text-black/40"></p><h2 id="viewerTitle" class="truncate font-display text-lg font-bold sm:text-xl"></h2></div><div class="flex items-center gap-2"><button id="openExternal" class="viewer-action" title="Abrir en nueva pestaña" aria-label="Abrir en nueva pestaña">↗</button><button class="viewer-action" data-close-viewer aria-label="Cerrar visor">×</button></div></header>
+        <div id="viewerNotice" class="viewer-notice"></div>
+        <div class="viewer-stage">
+          <div id="viewerLoading" class="viewer-loading"><span></span><p>Preparando experiencia…</p></div>
+          <iframe id="resourceFrame" title="Visor de experiencia digital" referrerpolicy="no-referrer" allow="fullscreen"></iframe>
+          <section id="resourceGallery" class="resource-gallery hidden" aria-label="Galería del recurso">
+            <div id="galleryEmpty" class="gallery-empty">
+              <span aria-hidden="true">▦</span>
+              <p class="eyebrow">Vista previa editorial</p>
+              <h3>Galería preparada para recibir imágenes</h3>
+              <p>Las capturas de este recurso se agregarán sin utilizar ni exponer la liga restringida de SharePoint.</p>
+            </div>
+            <div id="galleryContent" class="gallery-content hidden">
+              <figure><img id="galleryMainImage" alt="" /></figure>
+              <div id="galleryThumbs" class="gallery-thumbs" aria-label="Seleccionar imagen de la galería"></div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <template id="cardTemplate">
+      <article class="resource-card group">
+        <div class="card-visual"><img class="resource-thumbnail" alt="" loading="lazy" /><div class="visual-grid"></div><div class="resource-monogram"></div></div>
+        <div class="p-6"><div class="mb-4 flex flex-wrap gap-2"><span class="resource-type chip"></span><span class="resource-discipline chip chip-muted"></span><span class="resource-group chip chip-related hidden"></span></div><h3 class="resource-title font-display text-2xl font-bold leading-tight tracking-[-.035em]"></h3><p class="resource-course mt-3 line-clamp-2 text-sm leading-relaxed text-black/55"></p><div class="mt-5 flex items-center justify-between border-t border-black/10 pt-4"><span class="resource-school max-w-[58%] truncate text-xs font-semibold text-black/45"></span><button class="open-resource flex h-11 items-center gap-2 rounded-full bg-tec px-4 text-xs font-bold text-white transition group-hover:bg-mariner" aria-label="Ver ficha de la experiencia"><span>Ver ficha</span><b class="text-lg">↗</b></button></div></div>
+      </article>
+    </template>
+    <script>window.EDA_STATIC_MODE = true;</script>
+    <script src="public/data/edas.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

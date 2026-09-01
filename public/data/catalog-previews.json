@@ -1,0 +1,8 @@
+{
+  "_instructions": {
+    "purpose": "Galerías editoriales independientes de las URL restringidas de Content Hub.",
+    "resourceKey": "Usa el identificador del catálogo, por ejemplo recurso-487.",
+    "assets": "Cada elemento puede ser una ruta de imagen o un objeto con src y alt."
+  },
+  "resources": {}
+}

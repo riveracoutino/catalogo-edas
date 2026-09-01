@@ -1,0 +1,29 @@
+CATÁLOGO EDA — PAQUETE ESTÁTICO PARA PRESENTACIÓN
+
+Contenido: 721 recursos publicados provenientes de Content Hub.
+Filtros aplicados: EDA = Sí; Programa = Profesional o Sin información;
+Estatus = Publicado.
+
+Esta entrega permite revisar el catálogo, filtros, fichas, agrupaciones por EDA,
+galerías pendientes y recursos embebibles. No incluye dashboard funcional,
+registro de solicitudes, aprobación, revocación ni backend de rastreabilidad.
+
+PUBLICACIÓN
+1. Copia todo el contenido de esta carpeta al directorio público del servidor web.
+2. Configura index.html como documento inicial.
+3. Verifica acceso HTTPS y carga de recursos externos.
+
+ARCHIVOS PRINCIPALES DE DATOS
+public/data/edas.json
+public/data/edas.js
+public/data/catalog-previews.json
+
+IMPORTANTE
+Esta variante es únicamente para presentación y revisión. Las URLs originales
+forman parte del archivo JavaScript que utiliza el navegador y, por lo tanto,
+no están protegidas. Los recursos de SharePoint no se cargan directamente en el
+viewer y permanecen preparados para una galería editorial.
+
+Para solicitudes, URLs enmascaradas, rastreabilidad, revocación y protección de
+las direcciones originales debe utilizarse la variante segura con Node.js y
+Nginx.
