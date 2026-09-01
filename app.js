@@ -183,7 +183,8 @@ async function openViewer(resource) {
     state.currentAccessUrl = "";
     $("#viewerTitle").textContent = resource.title;
     $("#viewerMeta").textContent = `${resource.type} · Galería de vista previa`;
-    $("#viewerNotice").textContent = "Esta galería es independiente del archivo original protegido en SharePoint.";
+    $("#viewerNotice").textContent = "";
+    $("#viewerNotice").classList.add("hidden");
     $("#viewerLoading").classList.add("is-hidden");
     $("#resourceFrame").classList.add("hidden");
     $("#resourceFrame").src = "about:blank";
@@ -229,6 +230,7 @@ async function openViewer(resource) {
     : resource.requiresAuthorization
       ? "Modo estático de prototipo: abre el puerto 4180 para probar el acceso mediante token."
       : "Recurso de demostración disponible en este entorno local.";
+  $("#viewerNotice").classList.remove("hidden");
   $("#viewer").classList.add("is-open");
   $("#viewer").setAttribute("aria-hidden", "false");
   document.body.style.overflow = "hidden";
@@ -337,8 +339,6 @@ $("#accessRequestForm").addEventListener("submit", async (event) => {
   } catch (error) { status.textContent = error.message || "No fue posible enviar la solicitud."; }
 });
 $("#openExternal").addEventListener("click", () => state.currentAccessUrl && window.open(state.currentAccessUrl, "_blank", "noopener,noreferrer"));
-$("#menuButton").addEventListener("click", () => { const menu = $("#mobileMenu"); menu.classList.toggle("hidden"); $("#menuButton").setAttribute("aria-expanded", String(!menu.classList.contains("hidden"))); });
-$("#mobileMenu").addEventListener("click", () => $("#mobileMenu").classList.add("hidden"));
 document.addEventListener("keydown", (event) => { if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") { event.preventDefault(); $("#searchInput").focus(); } if (event.key === "Escape") { if ($("#requestDialog").classList.contains("is-open")) closeRequest(); else if ($("#viewer").classList.contains("is-open")) closeViewer(); else closeDetail(); } });
 
 init().then(async () => {
