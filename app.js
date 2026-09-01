@@ -4,6 +4,23 @@ const $ = (selector) => document.querySelector(selector);
 const normalize = (value = "") => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 const initials = (title) => title.split(/\s+/).filter((word) => word.length > 3).slice(0, 2).map((word) => word[0]).join("").toUpperCase() || "EDA";
 const unique = (key) => [...new Set(state.resources.map((item) => item[key]).filter(Boolean))].sort((a,b) => a.localeCompare(b, "es"));
+const isExternalWebsite = (resource) => {
+  const classification = normalize(`${resource.category || ""} ${resource.type || ""}`);
+  if (!classification.includes("sitio web")) return false;
+  try {
+    const hostname = new URL(resource.url).hostname.toLowerCase();
+    return hostname !== "eda.tec.mx" && !hostname.endsWith(".eda.tec.mx");
+  } catch {
+    return false;
+  }
+};
+const setTypeChip = (chip, resource) => {
+  const externalWebsite = isExternalWebsite(resource);
+  chip.textContent = externalWebsite ? "Sitio Web" : resource.type;
+  chip.classList.toggle("chip-external", externalWebsite);
+  if (externalWebsite) chip.title = "Sitio externo disponible para abrir";
+  else chip.removeAttribute("title");
+};
 const academicFields = [
   ["competencies", "Competencias"],
   ["keywords", "Palabras clave"],
@@ -62,7 +79,7 @@ function render() {
       card.querySelector(".card-visual").classList.add("has-thumbnail");
       thumbnail.addEventListener("error", () => card.querySelector(".card-visual").classList.remove("has-thumbnail"), { once: true });
     }
-    card.querySelector(".resource-type").textContent = resource.type;
+    setTypeChip(card.querySelector(".resource-type"), resource);
     card.querySelector(".resource-discipline").textContent = resource.discipline;
     const groupChip = card.querySelector(".resource-group");
     if (resource.relatedResourceCount > 1) {
@@ -91,7 +108,7 @@ function openDetail(resource, updateHash = true) {
   $("#detailThumbnail").src = resource.thumbnail || "";
   $("#detailThumbnail").alt = resource.thumbnail ? `Vista previa de ${resource.title}` : "";
   $("#detailThumbnail").onerror = () => detailHero.classList.remove("has-thumbnail");
-  $("#detailType").textContent = resource.type;
+  setTypeChip($("#detailType"), resource);
   $("#detailDiscipline").textContent = resource.discipline;
   $("#detailTitle").textContent = resource.title;
   $("#detailIntro").textContent = resource.description || `Experiencia digital vinculada con ${resource.course}. Este recurso utiliza el formato ${resource.type.toLowerCase()} para apoyar una participación activa y contextualizada.`;
